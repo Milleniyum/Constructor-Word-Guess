@@ -8,38 +8,56 @@ var movies = ['The Shawshank Redemption', 'The Godfather', 'The Dark Knight', 'T
 
 var word;
 var guesses;
+var curState;
 
 function playGame() {
     if (guesses > 0) {
         console.log(chalk.blue('\n' + guesses + ' guesses remaining!!!\n'));
-        inquirer.prompt([
-            {
-                message: chalk.green('Guess a letter!'),
-                name: 'guess'
-            }
-        ]).then(function(answer){
+        console.log(word.getWord() + '\n');
+        inquirer.prompt([{
+            message: chalk.green('Guess a letter!'),
+            name: 'guess'
+        }]).then(function(answer) {
+            guesses--;
             word.guess(answer.guess);
-            console.log(word.getWord());
+
+            if (curState === word.getWord()) {
+                console.log(chalk.magenta('\nINCORRECT!'));
+                playGame();
+            } else {
+                console.log(chalk.green('\nCORRECT!'));
+                curState = word.getWord();
+                if (curState.includes('_') === false) {
+                    console.log(chalk.yellow('You got it right!'))
+                } else {
+                    playGame();
+                }
+            };
         });
+    } else {
+        var correctWord = '';
+        for (var i = 0; i < word.letters.length; i++) {
+            correctWord += word.letters[i].character;
+        }
+        console.log(chalk.red('You ran out of guesses! The correct answer was ' + correctWord.trim() + '.'));
     }
 };
 
 function setWord(randWord) {
     word = new Word;
     word.storeWord(randWord);
+    curState = word.getWord();
     guesses = 15;
     playGame();
 }
 
 function getChoice() {
-    inquirer.prompt([
-        {
-            type: 'rawlist',
-            message: 'Please select a category to begin:',
-            choices: ['Actors', 'Movies', 'Exit Game'],
-            name: 'category'
-        }
-    ]).then(function (choice) {
+    inquirer.prompt([{
+        type: 'rawlist',
+        message: 'Please select a category to begin:',
+        choices: ['Actors', 'Movies', 'Exit Game'],
+        name: 'category'
+    }]).then(function(choice) {
         switch (choice.category) {
             case 'Actors':
                 setWord(actors[Math.floor(Math.random() * actors.length)]);

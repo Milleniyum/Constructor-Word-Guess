@@ -7,7 +7,7 @@ function Word() {
         for (var i = 0; i < this.letters.length; i++) {
             str += this.letters[i] + ' ';
         };
-        return str;
+        return str.trim();
     };
     this.guess = function(char) {
         for (var i = 0; i < this.letters.length; i++) {

@@ -4,7 +4,7 @@ var chalk = require('chalk');
 
 var categories = {
     actors: {
-        list: ['Robert De Niro', 'Jack Nicholson', 'Tom Hanks', 'Marlon Brando', 'Leonardo DiCaprio', 'Humphrey Bogart', 'Johnny Depp', 'Al Pacino', 'Denzel Washington', 'Laurence Olivier', 'Brad Pitt', 'Daniel Day Lewis', 'Tom Cruise', 'Cary Grant', 'Dustin Hoffman', 'Clark Gable', 'Sean Penn', 'Christian Bale', 'Gregory Peck', 'Sidney Poitier', 'Harrsion Ford', 'Spencer Tracy', 'George Clooney', 'Charlton Heston', 'Morgan Freeman', 'Katharine Hepburn', 'Meryl Streep', 'Ingrid Bergman', 'Marilyn Monroe', 'Jennifer Lawrence', 'Kate Winslet', 'Elizabeth Taylor', 'Cate Blanchett', 'Audrey Hepburn', 'Helen Mirren', 'Bette Davis', 'Viola Davis', 'Nicole Kidman', 'Sandra Bullock', 'Natalie Portman', 'Jodie Foster', 'Judi Dench', 'Amy Adams', 'Julia Roberts', 'Diane Keaton', 'Grace Kelly', 'Shirley MacLaine', 'Reese Witherspoon', 'Charlize Theron', 'Judy Garland', 'John Wayne', 'Paul Newman', 'Anthony Hopkins', 'Matt Damon', 'Russell Crowe', 'Robert Duvall', 'James Dean', 'Kirk Douglas', 'Henry Ford', 'Robin Williams', 'Orson Welles', 'Christopher Waltz', 'Heath Ledger', 'Sean Connery', 'Kevin Spacey', 'Gene Hackman', 'Liam Neeson', 'Edward Norton', 'Bruce Willis', 'Gary Cooper', 'Phillip Seymour Hoffman', 'Robert Redford', 'Ralph Fiennes', 'Will Smith', 'Steve McQueen', 'Vivien Leigh', 'Angelina Jolie', 'Anne Hathaway', 'Maggie Smith', 'Olivia de Havilland', 'Barbara Stanwyck', 'Joan Fontaine', 'Greer Garson', 'Faye Dunaway', 'Susan Hayward', 'Ellen Burstyn', 'Jane Wyman', 'Sophia Loren', 'Joan Crawford', 'Kathy Bates', 'Julie Andrews', 'Marion Cotillard', 'Deboarh Kerr', 'Sissy Spacek', 'Susan Sarandon', 'Luise Rainer', 'Glenn Close', 'Jane Fonda', 'Doris Day', 'Natalie Wood'],
+        list: ['Robert De Niro', 'Jack Nicholson', 'Tom Hanks', 'Marlon Brando', 'Leonardo DiCaprio', 'Humphrey Bogart', 'Johnny Depp', 'Al Pacino', 'Denzel Washington', 'Laurence Olivier', 'Brad Pitt', 'Daniel Day Lewis', 'Tom Cruise', 'Cary Grant', 'Dustin Hoffman', 'Clark Gable', 'Sean Penn', 'Christian Bale', 'Gregory Peck', 'Sidney Poitier', 'Harrison Ford', 'Spencer Tracy', 'George Clooney', 'Charlton Heston', 'Morgan Freeman', 'Katharine Hepburn', 'Meryl Streep', 'Ingrid Bergman', 'Marilyn Monroe', 'Jennifer Lawrence', 'Kate Winslet', 'Elizabeth Taylor', 'Cate Blanchett', 'Audrey Hepburn', 'Helen Mirren', 'Bette Davis', 'Viola Davis', 'Nicole Kidman', 'Sandra Bullock', 'Natalie Portman', 'Jodie Foster', 'Judi Dench', 'Amy Adams', 'Julia Roberts', 'Diane Keaton', 'Grace Kelly', 'Shirley MacLaine', 'Reese Witherspoon', 'Charlize Theron', 'Judy Garland', 'John Wayne', 'Paul Newman', 'Anthony Hopkins', 'Matt Damon', 'Russell Crowe', 'Robert Duvall', 'James Dean', 'Kirk Douglas', 'Henry Ford', 'Robin Williams', 'Orson Welles', 'Christopher Waltz', 'Heath Ledger', 'Sean Connery', 'Kevin Spacey', 'Gene Hackman', 'Liam Neeson', 'Edward Norton', 'Bruce Willis', 'Gary Cooper', 'Phillip Seymour Hoffman', 'Robert Redford', 'Ralph Fiennes', 'Will Smith', 'Steve McQueen', 'Vivien Leigh', 'Angelina Jolie', 'Anne Hathaway', 'Maggie Smith', 'Olivia de Havilland', 'Barbara Stanwyck', 'Joan Fontaine', 'Greer Garson', 'Faye Dunaway', 'Susan Hayward', 'Ellen Burstyn', 'Jane Wyman', 'Sophia Loren', 'Joan Crawford', 'Kathy Bates', 'Julie Andrews', 'Marion Cotillard', 'Deboarh Kerr', 'Sissy Spacek', 'Susan Sarandon', 'Luise Rainer', 'Glenn Close', 'Jane Fonda', 'Doris Day', 'Natalie Wood'],
         used: []
     },
     movies: {
@@ -21,6 +21,9 @@ var word = new Word;
 var guessCount;
 var curState;
 var guesses;
+var wins = 0;
+var losses = 0;
+var totalGuesses = 0;
 
 function playGame() {
     if (guessCount > 0) {
@@ -29,9 +32,10 @@ function playGame() {
         inquirer.prompt([{
             message: chalk.green('Guess a letter!'),
             name: 'guess'
-        }]).then(function (answer) {
+        }]).then(function(answer) {
             if (answer.guess.length === 1 && guesses.indexOf(answer.guess.toLowerCase()) === -1) {
                 guessCount--;
+                totalGuesses++;
                 guesses.push(answer.guess.toLowerCase());
                 word.guess(answer.guess);
 
@@ -43,6 +47,8 @@ function playGame() {
                     if (curState.includes('_') === false) {
                         console.log('\n' + word.getWord() + '\n');
                         console.log(chalk.yellow('You got it right!\n'));
+                        wins++;
+                        console.log('Wins: ' + wins + ' | Losses: ' + losses + ' | Avg Guesses: ' + parseInt(totalGuesses / (wins + losses)) + '\n');
                         getChoice();
                     } else {
                         console.log(chalk.green('\nCORRECT!'));
@@ -60,6 +66,8 @@ function playGame() {
         }
         console.log('\n' + word.getWord());
         console.log(chalk.red('\nYou ran out of guesses! The correct answer was ') + chalk.blue(correctWord.trim()) + '.\n');
+        losses++;
+        console.log('Wins: ' + wins + ' | Losses: ' + losses + ' | Avg Guesses: ' + parseInt(totalGuesses / (wins + losses)) + '\n');
         getChoice();
     }
 };
@@ -89,7 +97,7 @@ function getChoice() {
         message: 'Please select a category:',
         choices: ['Actors', 'Movies', 'Singers', 'Exit Game'],
         name: 'category'
-    }]).then(function (choice) {
+    }]).then(function(choice) {
         switch (choice.category) {
             case 'Actors':
                 chooseWord(categories.actors);

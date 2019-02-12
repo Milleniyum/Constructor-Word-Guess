@@ -11,7 +11,7 @@ The game currently has three word categories to choose from: Actors, Movies and 
 
 A word will display with underscores along with a message informing you how many guesses are remaining. Beginning guessing the word by enter one letter at a time and pressing enter. The game will remember which letters you've chosen and will not penalize you if you choose the same letter more than once. The same if you accidentally enter more than one letter.
 
-![Game Play Gif](https://github.com/Milleniyum/Constructor-Word-Guess/blob/master/images/word_guess.gif)
+![Game Play Gif](https://github.com/Milleniyum/Constructor-Word-Guess/blob/master/word_guess.gif)
 
 ## Technology
 * Javascript
